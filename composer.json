@@ -1,0 +1,17 @@
+{
+    "name": "chweb/cw-spamschutz",
+    "type": "grav-plugin",
+    "description": "Spam protection for all Grav form-plugin forms: honeypot, minimum fill time, content rules, per-sender rate limit - no third party, no cookies.",
+    "keywords": ["grav", "plugin", "form", "spam", "honeypot", "chweb"],
+    "license": "MIT",
+    "authors": [
+        { "name": "Thomas von CHWEB", "email": "info@chweb.ch", "homepage": "https://chweb.ch" }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": { "Grav\\Plugin\\CwSpamschutz\\": "classes/" }
+    }
+}

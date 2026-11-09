@@ -1,0 +1,34 @@
+enabled: true
+
+# Unsichtbares Koederfeld in jedem Formular.
+koederfeld: true
+
+# Mindestzeit zwischen Anzeigen und Absenden.
+mindestzeit:
+  aktiv: true
+  sekunden: 4
+  max_stunden: 24
+
+# Inhaltsregeln.
+inhalt:
+  aktiv: true
+  max_links: 2
+  fremde_schrift: true
+  sperrwoerter: []
+  spam_endungen:
+    - top
+    - xyz
+    - click
+    - icu
+    - cfd
+    - sbs
+    - rest
+
+# Hoechstens `anzahl` Einsendungen je Absender in `minuten`.
+begrenzung:
+  aktiv: true
+  anzahl: 5
+  minuten: 10
+
+# Eigene Meldung bei Abweisung (leer = Text aus der Sprachdatei).
+meldung: ''

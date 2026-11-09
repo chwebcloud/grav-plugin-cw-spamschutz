@@ -1,0 +1,186 @@
+name: 'CHWEB-Spamschutz'
+slug: cw-spamschutz
+type: plugin
+version: 1.2.0
+description: 'Spam protection for every form of the Grav form plugin: invisible honeypot, minimum fill time, content rules (links, foreign scripts, blocked words, spam domains) and a per-sender rate limit. No captcha, no cookies, no third-party service, and no change to your form pages.'
+icon: shield
+author:
+  name: CHWEB GmbH
+  email: info@chweb.ch
+  url: 'https://chweb.ch'
+homepage: 'https://chweb.ch'
+keywords: form, spam, honeypot, captcha alternative, privacy, gdpr, chweb
+bugs: 'https://github.com/chwebcloud/grav-plugin-cw-spamschutz/issues'
+docs: 'https://github.com/chwebcloud/grav-plugin-cw-spamschutz/blob/main/README.md'
+license: MIT
+
+compatibility:
+  grav:
+    - '2.0'
+
+dependencies:
+  - { name: grav, version: '>=1.7.0' }
+  - { name: form, version: '>=7.0.0' }
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: PLUGIN_CW_SPAMSCHUTZ.ENABLED_LABEL
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
+    hinweis:
+      type: display
+      markdown: true
+      content: 'Schützt **alle Formulare** der Website automatisch – Kontakt, Anfragen, Anmeldungen, Beitritt. Kein Captcha, keine Cookies, kein Drittdienst; echte Besucherinnen und Besucher merken nichts. Abgewiesene Einsendungen werden je Tag und Grund gezählt (ohne Inhalte, ohne IP-Adressen).'
+
+    koederfeld:
+      type: toggle
+      label: PLUGIN_CW_SPAMSCHUTZ.KOEDERFELD_LABEL
+      help: PLUGIN_CW_SPAMSCHUTZ.KOEDERFELD_HELP
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.YES
+        0: PLUGIN_ADMIN.NO
+      validate:
+        type: bool
+
+    mindestzeit_section:
+      type: section
+      title: PLUGIN_CW_SPAMSCHUTZ.MINDESTZEIT_SECTION_TITLE
+      underline: true
+
+    mindestzeit.aktiv:
+      type: toggle
+      label: PLUGIN_CW_SPAMSCHUTZ.MINDESTZEIT_AKTIV_LABEL
+      help: PLUGIN_CW_SPAMSCHUTZ.MINDESTZEIT_AKTIV_HELP
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.YES
+        0: PLUGIN_ADMIN.NO
+      validate:
+        type: bool
+
+    mindestzeit.sekunden:
+      type: number
+      label: PLUGIN_CW_SPAMSCHUTZ.MINDESTZEIT_SEKUNDEN_LABEL
+      default: 4
+      validate:
+        type: int
+        min: 1
+        max: 60
+
+    mindestzeit.max_stunden:
+      type: number
+      label: PLUGIN_CW_SPAMSCHUTZ.MINDESTZEIT_MAX_STUNDEN_LABEL
+      help: PLUGIN_CW_SPAMSCHUTZ.MINDESTZEIT_MAX_STUNDEN_HELP
+      default: 24
+      validate:
+        type: int
+        min: 1
+        max: 168
+
+    inhalt_section:
+      type: section
+      title: PLUGIN_CW_SPAMSCHUTZ.INHALT_SECTION_TITLE
+      underline: true
+
+    inhalt.aktiv:
+      type: toggle
+      label: PLUGIN_CW_SPAMSCHUTZ.INHALT_AKTIV_LABEL
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.YES
+        0: PLUGIN_ADMIN.NO
+      validate:
+        type: bool
+
+    inhalt.max_links:
+      type: number
+      label: PLUGIN_CW_SPAMSCHUTZ.INHALT_MAX_LINKS_LABEL
+      default: 2
+      validate:
+        type: int
+        min: 0
+        max: 20
+
+    inhalt.fremde_schrift:
+      type: toggle
+      label: PLUGIN_CW_SPAMSCHUTZ.INHALT_FREMDE_SCHRIFT_LABEL
+      help: PLUGIN_CW_SPAMSCHUTZ.INHALT_FREMDE_SCHRIFT_HELP
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.YES
+        0: PLUGIN_ADMIN.NO
+      validate:
+        type: bool
+
+    inhalt.sperrwoerter:
+      type: selectize
+      label: PLUGIN_CW_SPAMSCHUTZ.INHALT_SPERRWOERTER_LABEL
+      help: PLUGIN_CW_SPAMSCHUTZ.INHALT_SPERRWOERTER_HELP
+      validate:
+        type: commalist
+
+    inhalt.spam_endungen:
+      type: selectize
+      label: PLUGIN_CW_SPAMSCHUTZ.INHALT_SPAM_ENDUNGEN_LABEL
+      help: PLUGIN_CW_SPAMSCHUTZ.INHALT_SPAM_ENDUNGEN_HELP
+      validate:
+        type: commalist
+
+    begrenzung_section:
+      type: section
+      title: PLUGIN_CW_SPAMSCHUTZ.BEGRENZUNG_SECTION_TITLE
+      underline: true
+
+    begrenzung.aktiv:
+      type: toggle
+      label: PLUGIN_CW_SPAMSCHUTZ.BEGRENZUNG_AKTIV_LABEL
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.YES
+        0: PLUGIN_ADMIN.NO
+      validate:
+        type: bool
+
+    begrenzung.anzahl:
+      type: number
+      label: PLUGIN_CW_SPAMSCHUTZ.BEGRENZUNG_ANZAHL_LABEL
+      default: 5
+      validate:
+        type: int
+        min: 1
+        max: 100
+
+    begrenzung.minuten:
+      type: number
+      label: PLUGIN_CW_SPAMSCHUTZ.BEGRENZUNG_MINUTEN_LABEL
+      default: 10
+      validate:
+        type: int
+        min: 1
+        max: 1440
+
+    meldung_section:
+      type: section
+      title: PLUGIN_CW_SPAMSCHUTZ.MELDUNG_SECTION_TITLE
+      underline: true
+
+    meldung:
+      type: textarea
+      label: PLUGIN_CW_SPAMSCHUTZ.MELDUNG_LABEL
+      rows: 3
+      help: PLUGIN_CW_SPAMSCHUTZ.MELDUNG_HELP
