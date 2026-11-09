@@ -80,6 +80,55 @@ class Pruefung
     // Inhalt: Links, fremde Schriften, Sperrwoerter.
     // ------------------------------------------------------------------
 
+    /**
+     * Die Schriften, die auf DIESER Website fremd sind -- als Zeichenklasse
+     * fuer einen regulaeren Ausdruck, oder leer, wenn nichts uebrig bleibt.
+     *
+     * Gelesen werden die Sprachen der Installation (system.languages.supported,
+     * sonst die aktive Sprache). Fuehrt die Website eine Sprache, die eine
+     * dieser Schriften benutzt, zaehlt diese Schrift nicht mehr als fremd.
+     */
+    private static function fremdeSchriften(): string
+    {
+        static $zwischenspeicher = null;
+        if ($zwischenspeicher !== null) {
+            return $zwischenspeicher;
+        }
+
+        $schriften = [
+            'Cyrillic' => ['ru', 'uk', 'be', 'bg', 'sr', 'mk', 'kk', 'ky', 'mn', 'tg'],
+            'Han'      => ['zh', 'ja', 'ko'],
+            'Hiragana' => ['ja'],
+            'Katakana' => ['ja'],
+            'Hangul'   => ['ko'],
+            'Arabic'   => ['ar', 'fa', 'ur', 'ps', 'ku', 'sd'],
+            'Thai'     => ['th'],
+        ];
+
+        $grav = Grav::instance();
+        $sprachen = (array) ($grav['config']->get('system.languages.supported') ?: []);
+        if (!$sprachen && isset($grav['language'])) {
+            $sprachen = array_filter([
+                (string) $grav['language']->getActive(),
+                (string) $grav['language']->getDefault(),
+            ]);
+        }
+        $sprachen = array_map(
+            static fn ($s) => strtolower(substr((string) $s, 0, 2)),
+            $sprachen
+        );
+
+        $klasse = '';
+        foreach ($schriften as $schrift => $codes) {
+            if (array_intersect($codes, $sprachen)) {
+                continue;
+            }
+            $klasse .= '\p{' . $schrift . '}';
+        }
+
+        return $zwischenspeicher = $klasse;
+    }
+
     /** @param string[] $texte alle eingereichten Textwerte */
     public function pruefeInhalt(array $texte): ?string
     {
@@ -95,17 +144,26 @@ class Pruefung
             return 'zu_viele_links';
         }
 
-        // Fremde Schriften: Kyrillisch, Chinesisch/Japanisch/Koreanisch,
-        // Arabisch, Thai. Die Website ist deutschsprachig; ein einzelnes
-        // Wort (Name, Ort) ist erlaubt, eine Nachricht in fremder Schrift nicht.
-        if (!empty($c['fremde_schrift'] ?? true)) {
-            $fremd = preg_match_all('/[\p{Cyrillic}\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Arabic}\p{Thai}]/u', $alles);
-            $buchstaben = max(1, preg_match_all('/\p{L}/u', $alles));
-            if ($fremd >= 6 && $fremd / $buchstaben > 0.2) {
-                return 'fremde_schrift';
-            }
-            if ($fremd >= 3 && $links > 0) {
-                return 'fremde_schrift_mit_link';
+        // Fremde Schriften. AUS als Vorgabe, und wenn eingeschaltet, dann nur
+        // gegen Schriften, die diese Website selbst nicht benutzt.
+        //
+        // Warum: Die Regel war bis 1.3.0 an und zaehlte Kyrillisch, CJK,
+        // Arabisch und Thai immer als fremd. Fuer eine deutschsprachige Seite
+        // ist das richtig; eine russische, japanische oder arabische Website
+        // haette damit ihre eigenen Besucher abgewiesen, gleich nach der
+        // Installation. Angemerkt von Andy Miller beim Verzeichnis-Antrag
+        // (getgrav/grav#4395, 09.11.2026).
+        if (!empty($c['fremde_schrift'] ?? false)) {
+            $schriften = self::fremdeSchriften();
+            if ($schriften !== '') {
+                $fremd = preg_match_all('/[' . $schriften . ']/u', $alles);
+                $buchstaben = max(1, preg_match_all('/\p{L}/u', $alles));
+                if ($fremd >= 6 && $fremd / $buchstaben > 0.2) {
+                    return 'fremde_schrift';
+                }
+                if ($fremd >= 3 && $links > 0) {
+                    return 'fremde_schrift_mit_link';
+                }
             }
         }
 

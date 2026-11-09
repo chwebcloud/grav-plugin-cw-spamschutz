@@ -13,7 +13,11 @@ mindestzeit:
 inhalt:
   aktiv: true
   max_links: 2
-  fremde_schrift: true
+  # AUS als Vorgabe. Die Regel weist Nachrichten ab, die ueberwiegend in
+  # einer Schrift stehen, die diese Website selbst nicht fuehrt. Fuer eine
+  # deutschsprachige Seite ist sie sinnvoll; sie gehoert aber bewusst
+  # eingeschaltet, nicht ungefragt mitgeliefert.
+  fremde_schrift: false
   sperrwoerter: []
   spam_endungen:
     - top
@@ -29,6 +33,12 @@ begrenzung:
   aktiv: true
   anzahl: 5
   minuten: 10
+
+# Formulare AUSSERHALB des form-Plugins, die ebenfalls Koederfeld und
+# Zeitstempel bekommen sollen -- jede Zeile genau die Adresse aus dem
+# action-Attribut. Leer heisst: keines. Fuer die Anmeldung von
+# CHWEB-Newsletter etwa '/newsletter/subscribe'.
+fremde_formulare: []
 
 # Eigene Meldung bei Abweisung (leer = Text aus der Sprachdatei).
 meldung: ''

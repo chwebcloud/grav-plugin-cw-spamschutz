@@ -1,7 +1,7 @@
 name: 'CHWEB-Spamschutz'
 slug: cw-spamschutz
 type: plugin
-version: 1.2.0
+version: 1.3.0
 description: 'Spam protection for every form of the Grav form plugin: invisible honeypot, minimum fill time, content rules (links, foreign scripts, blocked words, spam domains) and a per-sender rate limit. No captcha, no cookies, no third-party service, and no change to your form pages.'
 icon: shield
 author:
@@ -16,6 +16,7 @@ license: MIT
 
 compatibility:
   grav:
+    - '1.7'
     - '2.0'
 
 dependencies:
@@ -39,7 +40,7 @@ form:
     hinweis:
       type: display
       markdown: true
-      content: 'Schützt **alle Formulare** der Website automatisch – Kontakt, Anfragen, Anmeldungen, Beitritt. Kein Captcha, keine Cookies, kein Drittdienst; echte Besucherinnen und Besucher merken nichts. Abgewiesene Einsendungen werden je Tag und Grund gezählt (ohne Inhalte, ohne IP-Adressen).'
+      content: PLUGIN_CW_SPAMSCHUTZ.HINWEIS_CONTENT
 
     koederfeld:
       type: toggle
@@ -119,7 +120,7 @@ form:
       label: PLUGIN_CW_SPAMSCHUTZ.INHALT_FREMDE_SCHRIFT_LABEL
       help: PLUGIN_CW_SPAMSCHUTZ.INHALT_FREMDE_SCHRIFT_HELP
       highlight: 1
-      default: 1
+      default: 0
       options:
         1: PLUGIN_ADMIN.YES
         0: PLUGIN_ADMIN.NO
@@ -178,6 +179,13 @@ form:
       type: section
       title: PLUGIN_CW_SPAMSCHUTZ.MELDUNG_SECTION_TITLE
       underline: true
+
+    fremde_formulare:
+      type: selectize
+      label: PLUGIN_CW_SPAMSCHUTZ.FREMDE_FORMULARE_LABEL
+      help: PLUGIN_CW_SPAMSCHUTZ.FREMDE_FORMULARE_HELP
+      validate:
+        type: commalist
 
     meldung:
       type: textarea

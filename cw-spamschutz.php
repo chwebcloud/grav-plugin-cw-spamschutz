@@ -79,14 +79,18 @@ class CwSpamschutzPlugin extends Plugin
             return;
         }
         $hatForm = stripos($out, '__form-name__') !== false;
-        // Newsletter-Anmeldung von cw-newsletter: Formular-Aktion endet auf /subscribe.
-        $hatNewsletter = preg_match(self::NEWSLETTER_FORM, $out) === 1;
-        if (!$hatForm && !$hatNewsletter) {
+        $fremdeMuster = $this->fremdeFormulare();
+        $hatFremdes = $fremdeMuster !== null && preg_match($fremdeMuster, $out) === 1;
+        if (!$hatForm && !$hatFremdes) {
             return;
         }
         $p = $this->pruefung();
+        // ueber text(), nicht ueber translate(): Ohne languages.supported ist
+        // keine Sprache aktiv, und Grav faellt auf Englisch zurueck -- auf
+        // einer deutschen Website stand dann «Please leave this field empty».
+        $koederBeschriftung = htmlspecialchars($this->text('KOEDER_LABEL'), ENT_QUOTES);
         $felder = '<div class="cw-hp" aria-hidden="true" style="position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important">'
-            . '<label>Dieses Feld bitte leer lassen<input type="text" name="' . Pruefung::KOEDER . '" value="" tabindex="-1" autocomplete="off"></label>'
+            . '<label>' . $koederBeschriftung . '<input type="text" name="' . Pruefung::KOEDER . '" value="" tabindex="-1" autocomplete="off"></label>'
             . '</div>'
             . '<input type="hidden" name="' . Pruefung::ZEIT . '" value="' . htmlspecialchars($p->zeitstempel(), ENT_QUOTES) . '">';
 
@@ -100,17 +104,48 @@ class CwSpamschutzPlugin extends Plugin
                 $neu
             ) ?? $neu;
         }
-        // Newsletter-Formular: gleich hinter dem <form>-Anfang.
-        if ($hatNewsletter) {
-            $neu = preg_replace(self::NEWSLETTER_FORM, '$1' . $felder, $neu) ?? $neu;
+        // Eingetragene fremde Formulare: gleich hinter dem <form>-Anfang.
+        if ($hatFremdes) {
+            $neu = preg_replace($fremdeMuster, '$1' . $felder, $neu) ?? $neu;
         }
         if ($neu !== $out) {
             $this->grav->output = $neu;
         }
     }
 
-    /** <form ... action="…/subscribe"> von cw-newsletter (Route konfigurierbar, Endung fest). */
-    private const NEWSLETTER_FORM = '~(<form\b[^>]*\baction=["\'][^"\']*/subscribe["\'][^>]*>)~i';
+    /**
+     * Muster fuer Formulare AUSSERHALB des form-Plugins, oder null.
+     *
+     * Bis 1.2.0 stand hier fest «jedes <form>, dessen action auf /subscribe
+     * endet». Gemeint war die Anmeldung von cw-newsletter -- getroffen hat es
+     * auch jedes andere Newsletter-Plugin und jedes eingebettete Formular
+     * eines Fremddienstes, der dann zwei unbekannte Felder geschickt bekam.
+     * Angemerkt von Andy Miller beim Verzeichnis-Antrag (getgrav/grav#4395,
+     * 09.11.2026). Jetzt traegt die Konfiguration ein, welche Adressen gemeint
+     * sind; ohne Eintrag passiert nichts.
+     *
+     * Verglichen wird das ENDE des action-Attributs: Ein Formular schreibt je
+     * nach Umgebung «/newsletter/subscribe» oder «https://chweb.ch/newsletter/
+     * subscribe» hinein, gemeint ist dasselbe. Ein Eintrag muss deshalb mit
+     * einem Schraegstrich beginnen, sonst traefe «subscribe» auch
+     * «/fremddienst/unsubscribe».
+     */
+    private function fremdeFormulare(): ?string
+    {
+        $adressen = (array) ($this->config->get('plugins.cw-spamschutz.fremde_formulare') ?: []);
+        $teile = [];
+        foreach ($adressen as $a) {
+            $a = trim((string) $a);
+            if ($a !== '') {
+                $teile[] = preg_quote($a, '~');
+            }
+        }
+        if (!$teile) {
+            return null;
+        }
+
+        return '~(<form\b[^>]*\baction=["\'][^"\']*(?:' . implode('|', $teile) . ')["\'][^>]*>)~i';
+    }
 
     /**
      * Pruefung fuer Formulare ausserhalb des form-Plugins (cw-newsletter):
