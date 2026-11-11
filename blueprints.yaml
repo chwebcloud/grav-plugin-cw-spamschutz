@@ -1,7 +1,7 @@
 name: 'CHWEB-Spamschutz'
 slug: cw-spamschutz
 type: plugin
-version: 1.3.0
+version: 1.3.1
 description: 'Spam protection for every form of the Grav form plugin: invisible honeypot, minimum fill time, content rules (links, foreign scripts, blocked words, spam domains) and a per-sender rate limit. No captcha, no cookies, no third-party service, and no change to your form pages.'
 icon: shield
 author:

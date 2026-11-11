@@ -29,4 +29,4 @@ PLUGIN_CW_SPAMSCHUTZ:
   HINWEIS_CONTENT: "Protegge **tutti i moduli** del sito automaticamente – contatto, richieste, iscrizioni, adesione. Nessun captcha, nessun cookie, nessun servizio di terzi; i visitatori reali non si accorgono di nulla. Gli invii respinti vengono contati per giorno e motivo (senza contenuti, senza indirizzi IP)."
   KOEDER_LABEL: "Si prega di lasciare vuoto questo campo"
   FREMDE_FORMULARE_LABEL: "Proteggere altri moduli"
-  FREMDE_FORMULARE_HELP: "Moduli che non provengono dal plugin form: inserire esattamente il valore del loro attributo action, per esempio /newsletter/subscribe. Vuoto significa nessuno. Solo i moduli elencati qui ricevono l’esca e la marca temporale."
+  FREMDE_FORMULARE_HELP: "Moduli che non provengono dal plugin form: inserire esattamente il valore del loro attributo action, per esempio /newsletter/subscribe. Il confronto riguarda la fine dell’indirizzo, quindi la voce deve iniziare con una barra — il solo «subscribe» corrisponderebbe anche a «/unsubscribe». Se la barra manca, viene aggiunta. Vuoto significa nessuno."

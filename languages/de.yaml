@@ -29,4 +29,4 @@ PLUGIN_CW_SPAMSCHUTZ:
   HINWEIS_CONTENT: "Schützt **alle Formulare** der Website automatisch – Kontakt, Anfragen, Anmeldungen, Beitritt. Kein Captcha, keine Cookies, kein Drittdienst; echte Besucherinnen und Besucher merken nichts. Abgewiesene Einsendungen werden je Tag und Grund gezählt (ohne Inhalte, ohne IP-Adressen)."
   KOEDER_LABEL: "Dieses Feld bitte leer lassen"
   FREMDE_FORMULARE_LABEL: "Weitere Formulare schützen"
-  FREMDE_FORMULARE_HELP: "Formulare, die nicht vom form-Plugin stammen: genau die Adresse aus dem action-Attribut eintragen, z. B. /newsletter/subscribe. Leer heisst: keines. Nur eingetragene Formulare bekommen Köderfeld und Zeitstempel."
+  FREMDE_FORMULARE_HELP: "Formulare, die nicht vom form-Plugin stammen: genau die Adresse aus dem action-Attribut eintragen, z. B. /newsletter/subscribe. Verglichen wird das Ende der Adresse, darum muss der Eintrag mit einem Schrägstrich beginnen — «subscribe» allein träfe sonst auch «/unsubscribe». Fehlt der Strich, wird er ergänzt. Leer heisst: keines."

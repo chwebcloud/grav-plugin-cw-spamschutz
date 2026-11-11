@@ -1,3 +1,12 @@
+# v1.3.1
+## 2026-11-11
+
+1. [](#improved)
+    * **The script check now finds the site's language the same way the messages do.** It read `system.languages.supported` and then `Language::getActive()`/`getDefault()`. On a single-language site that lists no supported languages, `getDefault()` can be `false` — Grav sets it from `reset($languages)` — and the site's own script would then have counted as foreign. The chain now continues through `system.languages.default_lang` and `site.default_lang`, and ends at `en`, which is what Grav itself assumes when nothing is set.
+    * **An entry under `fremde_formulare` without a leading slash gets one.** The entry is matched against the end of the action attribute, so a bare `subscribe` would also have matched `/unsubscribe`. The help text says so in all four languages.
+
+    Both suggested by Andy Miller after the plugin was accepted into the directory, [getgrav/grav#4395](https://github.com/getgrav/grav/issues/4395).
+
 # v1.3.0
 ## 2026-11-09
 

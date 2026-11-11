@@ -107,11 +107,24 @@ class Pruefung
 
         $grav = Grav::instance();
         $sprachen = (array) ($grav['config']->get('system.languages.supported') ?: []);
-        if (!$sprachen && isset($grav['language'])) {
+        if (!$sprachen) {
+            // Dieselbe Kette wie text(): Eine einsprachige Website fuehrt oft
+            // gar keine `supported`, und Language::getDefault() liefert dann
+            // `false` -- Grav setzt es aus `reset($languages)`, und das ist bei
+            // leerer Liste false. Ohne die zwei Konfigurationswerte waere die
+            // Sprache der Website unbekannt und JEDE fremde Schrift zaehlte,
+            // auch die eigene. Angeregt von Andy Miller (getgrav/grav#4395,
+            // 11.11.2026). Zuletzt 'en' -- genau das nimmt Grav selbst an,
+            // wenn nichts gesetzt ist (Language::translate()).
             $sprachen = array_filter([
-                (string) $grav['language']->getActive(),
-                (string) $grav['language']->getDefault(),
+                isset($grav['language']) ? (string) $grav['language']->getActive() : '',
+                isset($grav['language']) ? (string) $grav['language']->getDefault() : '',
+                (string) $grav['config']->get('system.languages.default_lang'),
+                (string) $grav['config']->get('site.default_lang'),
             ]);
+            if (!$sprachen) {
+                $sprachen = ['en'];
+            }
         }
         $sprachen = array_map(
             static fn ($s) => strtolower(substr((string) $s, 0, 2)),

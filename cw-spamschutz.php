@@ -136,9 +136,18 @@ class CwSpamschutzPlugin extends Plugin
         $teile = [];
         foreach ($adressen as $a) {
             $a = trim((string) $a);
-            if ($a !== '') {
-                $teile[] = preg_quote($a, '~');
+            if ($a === '') {
+                continue;
             }
+            // Ohne fuehrenden Schraegstrich traefe «subscribe» auch
+            // «/fremddienst/unsubscribe» -- verglichen wird ja das Ende der
+            // Adresse. Statt darauf zu vertrauen, dass jemand den Strich
+            // tippt, wird er ergaenzt (Andy Miller, getgrav/grav#4395,
+            // 11.11.2026).
+            if ($a[0] !== '/') {
+                $a = '/' . $a;
+            }
+            $teile[] = preg_quote($a, '~');
         }
         if (!$teile) {
             return null;

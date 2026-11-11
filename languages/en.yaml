@@ -29,4 +29,4 @@ PLUGIN_CW_SPAMSCHUTZ:
   HINWEIS_CONTENT: "Protects **every form** on the site automatically – contact, enquiries, registrations, membership. No captcha, no cookies, no third-party service; real visitors never notice it. Rejected submissions are counted per day and reason (no content, no IP addresses)."
   KOEDER_LABEL: "Please leave this field empty"
   FREMDE_FORMULARE_LABEL: "Protect further forms"
-  FREMDE_FORMULARE_HELP: "Forms that do not come from the form plugin: enter the exact value of their action attribute, for example /newsletter/subscribe. Empty means none. Only the forms listed here get the honeypot and the timestamp."
+  FREMDE_FORMULARE_HELP: "Forms that do not come from the form plugin: enter the exact value of their action attribute, for example /newsletter/subscribe. The entry is matched against the end of the address, so it has to start with a slash — a bare \"subscribe\" would also match \"/unsubscribe\". A missing slash is added for you. Empty means none."

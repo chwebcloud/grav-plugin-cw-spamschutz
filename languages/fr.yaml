@@ -29,4 +29,4 @@ PLUGIN_CW_SPAMSCHUTZ:
   HINWEIS_CONTENT: "Protège **tous les formulaires** du site automatiquement – contact, demandes, inscriptions, adhésion. Pas de captcha, pas de cookies, pas de service tiers ; les vrais visiteurs ne remarquent rien. Les envois rejetés sont comptés par jour et par motif (sans contenu, sans adresses IP)."
   KOEDER_LABEL: "Merci de laisser ce champ vide"
   FREMDE_FORMULARE_LABEL: "Protéger d’autres formulaires"
-  FREMDE_FORMULARE_HELP: "Formulaires qui ne viennent pas du plugin form : indiquez exactement la valeur de leur attribut action, par exemple /newsletter/subscribe. Vide signifie aucun. Seuls les formulaires listés ici reçoivent le leurre et l’horodatage."
+  FREMDE_FORMULARE_HELP: "Formulaires qui ne viennent pas du plugin form : indiquez exactement la valeur de leur attribut action, par exemple /newsletter/subscribe. La comparaison porte sur la fin de l’adresse, l’entrée doit donc commencer par une barre oblique — « subscribe » seul correspondrait aussi à « /unsubscribe ». Si la barre manque, elle est ajoutée. Vide signifie aucun."
